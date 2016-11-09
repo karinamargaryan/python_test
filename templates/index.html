@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="table-responsive-vertical">
+  <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Model</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Weight</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in products %}
+        <tr>
+          <td data-title="ID">{{ i.id }}</td>
+          <td data-title="Name">{{ i.name }}</td>
+          <td data-title="Model">{{ i.model }}</td>
+          <td data-title="Category">{{ i.category }}</td>
+          <td data-title="Price">{{ i.price }}</td>
+          <td data-title="Weight">{{ i.weight }}</td>
+          <td data-title="Date">{{ i.created }}</td>
+          <td data-title="Actions">
+             <a href="#" class="edit_product">Edit</a>
+             <a href="{% url 'base:delete' i.id %}" class="delete_product">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <input type="button" class="btn btn-info " id="add_product" value="Add product">
+</div>
+<div class="add-product" style="display: none">
+
+<form method="post" action="{% url 'base:insert' %}" >
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <input type="text" class="form-control" name="name" id="name">
+  </div>
+  <div class="form-group">
+    <label for="model">Model:</label>
+    <input type="text" class="form-control" name="model" id="model">
+  </div>
+  <div class="form-group">
+    <label for="category">Category:</label>
+    <input type="text" class="form-control" name="category" id="category">
+  </div>
+  <div class="form-group">
+    <label for="price">Price:</label>
+    <input type="number" class="form-control" name="price" id="price">
+  </div>
+ <div class="form-group">
+    <label for="weight">Weight:</label>
+    <input type="number" class="form-control" name="weight" id="weight">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+</div>
+<div class="edit-product" style="display: none">
+
+<form method="post" action="{% url 'base:update' %}" >
+   <input type="hidden" name="id" id="id">
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <input type="text" class="form-control" name="name" id="edit_name">
+  </div>
+  <div class="form-group">
+    <label for="model">Model:</label>
+    <input type="text" class="form-control" name="model" id="edit_model">
+  </div>
+  <div class="form-group">
+    <label for="category">Category:</label>
+    <input type="text" class="form-control" name="category" id="edit_category">
+  </div>
+  <div class="form-group">
+    <label for="price">Price:</label>
+    <input type="number" class="form-control" name="price" id="edit_price">
+  </div>
+ <div class="form-group">
+    <label for="weight">Weight:</label>
+    <input type="number" class="form-control" name="weight" id="edit_weight">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+</div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#add_product').on('click',function () {
+        $('.edit-product').css('display','none');
+       $('.add-product').css('display','block');
+    });
+    $('.edit_product').on('click',function () {
+
+        var result=[];
+        var tr = $(this).closest('tr');
+        var tds=tr.find('td');
+        for(var i = 0; i<tds.length;i++){
+            var td = $(tds[i]);
+
+            result.push(td.text().trim());
+        }
+        $('#id').val(result[0]);
+        $('#edit_name').val(result[1]);
+        $('#edit_model').val(result[2]);
+        $('#edit_category').val(result[3]);
+        $('#edit_price').val(result[4]);
+        $('#edit_weight').val(result[5]);
+        $('.add-product').css('display','none');
+        $('.edit-product').css('display','block');
+        console.log(result[5]);
+    });
+    $('.delete_product').on('click',function (e) {
+        e.preventDefault();
+        var url = this.href;
+        var confirmText = "Are you sure you want to delete this product?";
+        if(confirm(confirmText)) {
+            window.location = url;
+        }
+    });
+});
+</script>
+{% endblock %}
